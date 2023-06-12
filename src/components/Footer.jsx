@@ -14,7 +14,7 @@ const Footer = () => {
     <FooterContainer>
       <Box textAlign="center">
         <Typography variant="body2" color="text.secondary">
-          © {new Date().getFullYear()} My App. All rights reserved.
+          © {new Date().getFullYear()} Desenvolvimento web com react AT-INFNET.
         </Typography>
       </Box>
     </FooterContainer>

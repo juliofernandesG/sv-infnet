@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Register from '../pages/Register';
 import Login from '../pages/Login';
 import HomePage from '../pages/HomePage';
+import SalesPage from '../pages/SalesPage';
 
 function AppRoutes() {
   return (
@@ -13,6 +14,7 @@ function AppRoutes() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/homepage" element={<HomePage />} />
+        <Route path="/salespage" element={<SalesPage />} />
       </Routes>
     </Router>
   );

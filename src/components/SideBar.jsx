@@ -8,6 +8,11 @@ import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
+import GroupIcon from '@mui/icons-material/Group';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import SalesPage from '../pages/SalesPage';
 
 const DrawerContainer = styled('div')({
   width: 250,
@@ -18,21 +23,39 @@ const Sidebar = ({ open, onClose }) => {
     onClose();
   };
 
+  const [showSalesPage, setShowSalesPage] = React.useState(false);
+
+  const handleSalesButtonClick = () => {
+    setShowSalesPage(true);
+  };
+
   return (
     <Drawer anchor="left" open={open} onClose={handleDrawerClose}>
       <DrawerContainer>
         <List>
           <ListItem button>
             <ListItemIcon>
-              <InboxIcon />
+              <GroupIcon />
             </ListItemIcon>
-            <ListItemText primary="Inbox" />
+            <ListItemText primary="Clientes" />
           </ListItem>
           <ListItem button>
             <ListItemIcon>
-              <MailIcon />
+              <FormatListBulletedIcon />
             </ListItemIcon>
-            <ListItemText primary="Mail" />
+            <ListItemText primary="Cotações" />
+          </ListItem>
+          <ListItem button onClick={handleSalesButtonClick}>
+            <ListItemIcon>
+              <MonetizationOnIcon />
+            </ListItemIcon>
+            <ListItemText primary="Vendas" />
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+              <ShoppingCartIcon />
+            </ListItemIcon>
+            <ListItemText primary="Produtos" />
           </ListItem>
         </List>
         <Divider />
@@ -51,6 +74,7 @@ const Sidebar = ({ open, onClose }) => {
           </ListItem>
         </List>
       </DrawerContainer>
+      {showSalesPage && <SalesPage />}
     </Drawer>
   );
 };

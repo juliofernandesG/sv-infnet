@@ -60,7 +60,7 @@ const Login = ({ history }) => {
     try {
       await auth.signInWithEmailAndPassword(email, password);
       console.log('Usuário autenticado com sucesso!');
-      history.push('/dashboard');
+      history.push('/homepage');
     } catch (error) {
       console.log('Erro ao autenticar usuário:', error);
     }
@@ -71,7 +71,7 @@ const Login = ({ history }) => {
       const provider = new auth.GoogleAuthProvider();
       await auth.signInWithPopup(provider);
       console.log('Usuário autenticado com sucesso com o Google!');
-      history.push('/dashboard');
+      history.push('/homepage');
     } catch (error) {
       console.log('Erro ao autenticar usuário com o Google:', error);
     }

@@ -24,7 +24,7 @@ const Navbar = ({ onMenuButtonClick }) => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            My App
+            Sistema de vendas
           </Typography>
         </Toolbar>
       </AppBar>
