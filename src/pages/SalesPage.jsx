@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
 import { Typography, Select, Button, TextField } from '@mui/material';
-import { collection, addDoc, updateDoc, deleteDoc, getDocs,  onSnapshot } from 'firebase/firestore';
-import  auth  from '../config/firebase';
+import { collection, addDoc, updateDoc, deleteDoc, getDocs, onSnapshot } from 'firebase/firestore';
+import  { firestore } from '../config/firebase';
+
 
 const useStyles = makeStyles({
   root: {
@@ -30,7 +31,7 @@ const SalesPage = () => {
 
   useEffect(() => {
     const fetchSales = async () => {
-      const salesSnapshot = await getDocs(collection(auth, 'sales'));
+      const salesSnapshot = await getDocs(collection(firestore, 'sales'));
       const salesData = salesSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -40,7 +41,7 @@ const SalesPage = () => {
 
     fetchSales();
 
-    const unsubscribe = onSnapshot(collection(auth, 'sales'), () => {
+    const unsubscribe = onSnapshot(collection(firestore, 'sales'), () => {
       fetchSales();
     });
 
@@ -62,7 +63,7 @@ const SalesPage = () => {
 
     if (paymentMethod) {
       try {
-        await addDoc(collection(auth, 'sales'), {
+        await addDoc(collection(firestore, 'sales'), {
           paymentMethod,
         });
 
@@ -75,7 +76,7 @@ const SalesPage = () => {
 
   const handleDeleteSale = async (saleId) => {
     try {
-      await deleteDoc(collection(auth, 'sales', saleId));
+      await deleteDoc(collection(firestore, 'sales', saleId));
     } catch (error) {
       console.error('Error deleting sale:', error);
     }
@@ -83,7 +84,7 @@ const SalesPage = () => {
 
   const handleUpdateSale = async (saleId, newData) => {
     try {
-      await updateDoc(collection(auth, 'sales', saleId), newData);
+      await updateDoc(collection(firestore, 'sales', saleId), newData);
     } catch (error) {
       console.error('Error updating sale:', error);
     }
@@ -121,10 +122,7 @@ const SalesPage = () => {
         {filteredSales.map((sale) => (
           <div key={sale.id}>
             <Typography>{sale.paymentMethod}</Typography>
-            <Button
-              variant="outlined"
-              onClick={() => handleDeleteSale(sale.id)}
-            >
+            <Button variant="outlined" onClick={() => handleDeleteSale(sale.id)}>
               Delete
             </Button>
             <Button

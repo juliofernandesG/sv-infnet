@@ -12,7 +12,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import SalesPage from '../pages/SalesPage';
+import { Link } from 'react-router-dom';
 
 const DrawerContainer = styled('div')({
   width: 250,
@@ -21,12 +21,6 @@ const DrawerContainer = styled('div')({
 const Sidebar = ({ open, onClose }) => {
   const handleDrawerClose = () => {
     onClose();
-  };
-
-  const [showSalesPage, setShowSalesPage] = React.useState(false);
-
-  const handleSalesButtonClick = () => {
-    setShowSalesPage(true);
   };
 
   return (
@@ -45,7 +39,7 @@ const Sidebar = ({ open, onClose }) => {
             </ListItemIcon>
             <ListItemText primary="Cotações" />
           </ListItem>
-          <ListItem button onClick={handleSalesButtonClick}>
+          <ListItem button components={Link} to="/salespage">
             <ListItemIcon>
               <MonetizationOnIcon />
             </ListItemIcon>
@@ -60,11 +54,11 @@ const Sidebar = ({ open, onClose }) => {
         </List>
         <Divider />
         <List>
-          <ListItem button>
+          <ListItem button component={Link} to="/mycalendar">
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
-            <ListItemText primary="Inbox" />
+            <ListItemText primary="Calendario" />
           </ListItem>
           <ListItem button>
             <ListItemIcon>
@@ -74,7 +68,6 @@ const Sidebar = ({ open, onClose }) => {
           </ListItem>
         </List>
       </DrawerContainer>
-      {showSalesPage && <SalesPage />}
     </Drawer>
   );
 };

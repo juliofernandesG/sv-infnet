@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { TextField, Button, Typography, Box, Link } from '@mui/material';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import auth from '../config/firebase';
-import { Link as RouterLink } from 'react-router-dom'; // Importe o componente Link do react-router-dom
+import { auth } from '../config/firebase';
+
+import { Link as RouterLink } from 'react-router-dom';
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -34,7 +35,7 @@ const Register = () => {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       console.log('Usuário registrado:', user);
-      window.location.href = '/dashboard'; // Redirecionar para a página de login após o registro bem-sucedido
+      window.location.href = '/dashboard';
     } catch (error) {
       setError(error.message);
     }
@@ -50,7 +51,7 @@ const Register = () => {
         minHeight: '100vh',
       }}
     >
-      <Typography variant="h4" component="h1" gutterBottom>
+      <Typography variant="h1" component="h1" gutterBottom>
         Registro de Usuário
       </Typography>
       <Box
@@ -95,7 +96,9 @@ const Register = () => {
         <Button type="submit" variant="contained" color="primary">
           Registrar
         </Button>
-        <Link component={RouterLink} to="/login">Voltar para o login</Link> {/* Link para retornar para a página de login */}
+        <Link component={RouterLink} to="/login">
+          Voltar para o login
+        </Link>
       </Box>
     </Box>
   );

@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { blue } from '@mui/material/colors';
-import auth from '../config/firebase';
+import { auth } from '../config/firebase';
 
 const Container = styled('div')({
   display: 'flex',
