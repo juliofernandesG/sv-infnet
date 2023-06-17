@@ -42,6 +42,7 @@ const SalesPage = () => {
   const [paymentMethod, setPaymentMethod] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [total, setTotal] = useState(0);
+  const [product, setProduct] = useState('');
 
   useEffect(() => {
     // Atualiza o total quando a quantidade ou o método de pagamento mudarem
@@ -54,6 +55,11 @@ const SalesPage = () => {
 
   const handleQuantityChange = (event) => {
     setQuantity(parseInt(event.target.value));
+  };
+
+  const handleProductSearch = () => {
+    // Lógica para buscar o produto com base no texto digitado no campo de busca
+    console.log('Produto buscado:', product);
   };
 
   const calculateTotal = () => {
@@ -77,6 +83,7 @@ const SalesPage = () => {
     event.preventDefault();
 
     // Registra a venda
+    console.log('Produto:', product);
     console.log('Método de pagamento:', paymentMethod);
     console.log('Quantidade:', quantity);
     console.log('Total:', total);
@@ -89,32 +96,40 @@ const SalesPage = () => {
       <Container>
         <Title>Realizar Venda</Title>
         <Form onSubmit={handleFormSubmit}>
-       <TextField
-  select
-  label="Método de Pagamento"
-  value={paymentMethod}
-  onChange={handlePaymentMethodChange}
->
-  <option value="dinheiro">Dinheiro</option>
-  <option value="credito">Cartão de Crédito</option>
-  <option value="debito">Cartão de Débito</option>
-  <option value="pix">PIX</option>
-</TextField>
-
+          <TextField
+            label="Buscar Produto"
+            value={product}
+            onChange={(event) => setProduct(event.target.value)}
+          />
+          <Button variant="contained" onClick={handleProductSearch}>
+            Buscar
+          </Button>
+          <TextField
+            select
+            label="Método de Pagamento"
+            value={paymentMethod}
+            onChange={handlePaymentMethodChange}
+          >
+            <option value="dinheiro">Dinheiro</option>
+            <option value="credito">Cartão de Crédito</option>
+            <option value="debito">Cartão de Débito</option>
+            <option value="pix">PIX</option>
+          </TextField>
           <TextField
             type="number"
             label="Quantidade"
             value={quantity}
             onChange={handleQuantityChange}
           />
-          <TextField
-            type="text"
-            label="Total"
-            value={total}
-            disabled
-          />
+          <TextField type="text" label="Total" value={total} disabled />
           <Button variant="contained" type="submit">
             Registrar Venda
+          </Button>
+          <Button variant="contained" onClick={() => console.log('Venda cancelada')}>
+            Cancelar Venda
+          </Button>
+          <Button variant="contained" onClick={calculateTotal}>
+            Atualizar Total
           </Button>
         </Form>
       </Container>

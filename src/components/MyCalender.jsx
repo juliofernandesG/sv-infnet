@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
+import 'moment/locale/pt-br';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@material-ui/core';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
@@ -16,6 +17,7 @@ const MyCalendar = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [activity, setActivity] = useState({ date: null, time: '', team: '', deadline: '' });
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     const loadEvents = async () => {
@@ -73,10 +75,14 @@ const MyCalendar = () => {
     }));
   };
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   return (
     <div>
-      <Navbar onMenuButtonClick={() => {}} />
-      <Sidebar />
+      <Navbar onMenuButtonClick={toggleSidebar} />
+      <Sidebar isOpen={isSidebarOpen} />
       <div style={{ padding: '16px' }}>
         <Calendar
           localizer={localizer}
@@ -111,7 +117,7 @@ const MyCalendar = () => {
             <TextField
               margin="dense"
               label="Time"
-              name="Time"
+              name="team"
               value={activity.team}
               onChange={handleActivityInputChange}
               fullWidth

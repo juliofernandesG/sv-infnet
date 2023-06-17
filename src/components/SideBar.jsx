@@ -37,7 +37,7 @@ const Sidebar = ({ open, onClose }) => {
             <ListItemIcon>
               <FormatListBulletedIcon />
             </ListItemIcon>
-            <ListItemText primary="Cotações" />
+            <ListItemText primary="Listad de tarefas" />
           </ListItem>
           <ListItem button components={Link} to="/salespage">
             <ListItemIcon>
