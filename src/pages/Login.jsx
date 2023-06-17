@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { styled } from '@mui/system';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { blue } from '@mui/material/colors';
 import { auth } from '../config/firebase';
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithRedirect } from 'firebase/auth';
 
 const Container = styled('div')({
   display: 'flex',
@@ -42,9 +43,10 @@ const theme = createTheme({
   },
 });
 
-const Login = ({ history }) => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -58,9 +60,9 @@ const Login = ({ history }) => {
     event.preventDefault();
 
     try {
-      await auth.signInWithEmailAndPassword(email, password);
+      await signInWithEmailAndPassword(auth, email, password);
       console.log('Usuário autenticado com sucesso!');
-      history.push('/homepage');
+      navigate('/homepage');
     } catch (error) {
       console.log('Erro ao autenticar usuário:', error);
     }
@@ -68,10 +70,8 @@ const Login = ({ history }) => {
 
   const handleGoogleSignIn = async () => {
     try {
-      const provider = new auth.GoogleAuthProvider();
-      await auth.signInWithPopup(provider);
-      console.log('Usuário autenticado com sucesso com o Google!');
-      history.push('/homepage');
+      const provider = new GoogleAuthProvider();
+      await signInWithRedirect(auth, provider);
     } catch (error) {
       console.log('Erro ao autenticar usuário com o Google:', error);
     }

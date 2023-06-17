@@ -18,7 +18,29 @@ const HomePage = () => {
     <div>
       <Navbar onMenuButtonClick={handleMenuButtonClick} />
       <Sidebar open={isSidebarOpen} onClose={handleSidebarClose} />
-      {/* Restante do conteúdo da sua página */}
+
+      <div style={{ padding: '16px' }}>
+        <h1>Dashboard</h1>
+
+        {/* Informações de vendas */}
+        <section>
+          <h2>Vendas</h2>
+          {/* Adicione aqui o código para exibir as informações de vendas */}
+        </section>
+
+        {/* Métodos de pagamento */}
+        <section>
+          <h2>Métodos de Pagamento</h2>
+          {/* Adicione aqui o código para exibir as informações de métodos de pagamento */}
+        </section>
+
+        {/* Produtos */}
+        <section>
+          <h2>Produtos</h2>
+          {/* Adicione aqui o código para exibir as informações de produtos */}
+        </section>
+      </div>
+
       <Footer />
     </div>
   );

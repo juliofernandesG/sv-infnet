@@ -1,144 +1,125 @@
-import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@mui/styles';
-import { Typography, Select, Button, TextField } from '@mui/material';
-import { collection, addDoc, updateDoc, deleteDoc, getDocs, onSnapshot } from 'firebase/firestore';
-import  { firestore } from '../config/firebase';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from 'react';
+import { styled } from '@mui/system';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { blue } from '@mui/material/colors';
 
+import Navbar from '../components/Navbar';
+import Sidebar from '../components/SideBar';
+import Footer from '../components/Footer';
 
-const useStyles = makeStyles({
-  root: {
-    padding: '16px',
-  },
-  form: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '16px',
-    marginBottom: '16px',
-  },
-  list: {
-    maxHeight: '300px',
-    overflowY: 'auto',
-    border: '1px solid #ccc',
-    padding: '8px',
+const Container = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  height: '100vh',
+});
+
+const Form = styled('form')({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '16px',
+  marginBottom: '16px',
+  width: '300px',
+});
+
+const Title = styled('h1')({
+  marginBottom: '24px',
+});
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: blue[500],
+    },
   },
 });
 
 const SalesPage = () => {
-  const classes = useStyles();
-  const [sales, setSales] = useState([]);
   const [paymentMethod, setPaymentMethod] = useState('');
-  const [searchText, setSearchText] = useState('');
+  const [quantity, setQuantity] = useState(1);
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
-    const fetchSales = async () => {
-      const salesSnapshot = await getDocs(collection(firestore, 'sales'));
-      const salesData = salesSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setSales(salesData);
-    };
-
-    fetchSales();
-
-    const unsubscribe = onSnapshot(collection(firestore, 'sales'), () => {
-      fetchSales();
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+    // Atualiza o total quando a quantidade ou o método de pagamento mudarem
+    calculateTotal();
+  }, [quantity, paymentMethod]);
 
   const handlePaymentMethodChange = (event) => {
     setPaymentMethod(event.target.value);
   };
 
-  const handleSearchTextChange = (event) => {
-    setSearchText(event.target.value);
+  const handleQuantityChange = (event) => {
+    setQuantity(parseInt(event.target.value));
   };
 
-  const handleSubmit = async (event) => {
+  const calculateTotal = () => {
+    // Lógica para calcular o total baseado na quantidade e método de pagamento
+    let unitPrice = 10; // Preço unitário do produto
+    let totalAmount = unitPrice * quantity;
+
+    // Aplica desconto ou taxa adicional baseado no método de pagamento
+    if (paymentMethod === 'credito') {
+      totalAmount *= 1.1; // Aplica 10% de taxa para pagamento com cartão de crédito
+    } else if (paymentMethod === 'debito') {
+      totalAmount *= 1.05; // Aplica 5% de taxa para pagamento com cartão de débito
+    } else if (paymentMethod === 'pix') {
+      totalAmount *= 0.95; // Aplica 5% de desconto para pagamento com PIX
+    }
+
+    setTotal(totalAmount);
+  };
+
+  const handleFormSubmit = (event) => {
     event.preventDefault();
 
-    if (paymentMethod) {
-      try {
-        await addDoc(collection(firestore, 'sales'), {
-          paymentMethod,
-        });
-
-        setPaymentMethod('');
-      } catch (error) {
-        console.error('Error adding sale:', error);
-      }
-    }
+    // Registra a venda
+    console.log('Método de pagamento:', paymentMethod);
+    console.log('Quantidade:', quantity);
+    console.log('Total:', total);
   };
-
-  const handleDeleteSale = async (saleId) => {
-    try {
-      await deleteDoc(collection(firestore, 'sales', saleId));
-    } catch (error) {
-      console.error('Error deleting sale:', error);
-    }
-  };
-
-  const handleUpdateSale = async (saleId, newData) => {
-    try {
-      await updateDoc(collection(firestore, 'sales', saleId), newData);
-    } catch (error) {
-      console.error('Error updating sale:', error);
-    }
-  };
-
-  const filteredSales = sales.filter((sale) =>
-    sale.paymentMethod.toLowerCase().includes(searchText.toLowerCase())
-  );
 
   return (
-    <div className={classes.root}>
-      <Typography variant="h4">Sales Page</Typography>
-      <form className={classes.form} onSubmit={handleSubmit}>
-        <Select value={paymentMethod} onChange={handlePaymentMethodChange}>
-          <option value="">Select a payment method</option>
-          <option value="credit">Credit</option>
-          <option value="debit">Debit</option>
-          <option value="cash">Cash</option>
-          <option value="pix">PIX</option>
-          <option value="boleto">Boleto</option>
-        </Select>
-        <Button variant="contained" type="submit" disabled={!paymentMethod}>
-          Register Sale
-        </Button>
-      </form>
-      <TextField
-        label="Search"
-        value={searchText}
-        onChange={handleSearchTextChange}
-        fullWidth
-        variant="outlined"
-        margin="normal"
-      />
-      <div className={classes.list}>
-        {filteredSales.map((sale) => (
-          <div key={sale.id}>
-            <Typography>{sale.paymentMethod}</Typography>
-            <Button variant="outlined" onClick={() => handleDeleteSale(sale.id)}>
-              Delete
-            </Button>
-            <Button
-              variant="outlined"
-              onClick={() =>
-                handleUpdateSale(sale.id, {
-                  paymentMethod: `${sale.paymentMethod} - Updated`,
-                })
-              }
-            >
-              Update
-            </Button>
-          </div>
-        ))}
-      </div>
-    </div>
+    <ThemeProvider theme={theme}>
+      <Navbar />
+      <Sidebar />
+      <Container>
+        <Title>Realizar Venda</Title>
+        <Form onSubmit={handleFormSubmit}>
+       <TextField
+  select
+  label="Método de Pagamento"
+  value={paymentMethod}
+  onChange={handlePaymentMethodChange}
+>
+  <option value="dinheiro">Dinheiro</option>
+  <option value="credito">Cartão de Crédito</option>
+  <option value="debito">Cartão de Débito</option>
+  <option value="pix">PIX</option>
+</TextField>
+
+          <TextField
+            type="number"
+            label="Quantidade"
+            value={quantity}
+            onChange={handleQuantityChange}
+          />
+          <TextField
+            type="text"
+            label="Total"
+            value={total}
+            disabled
+          />
+          <Button variant="contained" type="submit">
+            Registrar Venda
+          </Button>
+        </Form>
+      </Container>
+      <Footer />
+    </ThemeProvider>
   );
 };
 
