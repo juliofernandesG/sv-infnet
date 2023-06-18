@@ -5,8 +5,8 @@ import Login from '../pages/Login';
 import HomePage from '../pages/HomePage';
 import SalesPage from '../pages/SalesPage';
 import MyCalendar from '../components/MyCalender';
-import TodoList from '../components/TodoList.jsx'
-import ProductForm from '../pages/ProductForm';
+import TodoList from '../components/TodoList.jsx';
+import AddProductForm from '../pages/AddProductForm';
 
 function AppRoutes() {
   return (
@@ -20,7 +20,7 @@ function AppRoutes() {
         <Route path="/salespage" element={<SalesPage />} />
         <Route path="/mycalendar" element={<MyCalendar />} />
         <Route path="/todolist" element={<TodoList />} />
-        <Route path="/productform" element={<ProductForm />} />
+        <Route path="/addproductform" element={<AddProductForm />} />
       </Routes>
     </Router>
   );

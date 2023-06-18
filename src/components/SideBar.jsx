@@ -33,19 +33,13 @@ const Sidebar = ({ open, onClose }) => {
             </ListItemIcon>
             <ListItemText primary="Clientes" />
           </ListItem>
-          <ListItem button component={Link} to="/todolist">
-            <ListItemIcon>
-              <FormatListBulletedIcon />
-            </ListItemIcon>
-            <ListItemText primary="Lista de tarefas" /> 
-          </ListItem>
           <ListItem button component={Link} to="/salespage">
             <ListItemIcon>
               <MonetizationOnIcon />
             </ListItemIcon>
             <ListItemText primary="Vendas" />
           </ListItem>
-          <ListItem button>
+          <ListItem button components={Link} to="/addproductform">
             <ListItemIcon>
               <ShoppingCartIcon />
             </ListItemIcon>

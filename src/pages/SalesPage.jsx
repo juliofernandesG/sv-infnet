@@ -6,7 +6,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { blue } from '@mui/material/colors';
 import { collection, addDoc } from 'firebase/firestore';
 import { firestore } from '../config/firebase';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import MenuItem from '@mui/material/MenuItem'; // Importe o componente MenuItem aqui
 
 import Navbar from '../components/Navbar';
