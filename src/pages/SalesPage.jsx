@@ -7,6 +7,7 @@ import { blue } from '@mui/material/colors';
 import { collection, addDoc } from 'firebase/firestore';
 import { firestore } from '../config/firebase';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import MenuItem from '@mui/material/MenuItem'; // Importe o componente MenuItem aqui
 
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/SideBar';
@@ -45,9 +46,9 @@ const SalesPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [total, setTotal] = useState(0);
   const [product, setProduct] = useState('');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
-    // Atualiza o total quando a quantidade ou o método de pagamento mudarem
     calculateTotal();
   }, [quantity, paymentMethod]);
 
@@ -60,22 +61,19 @@ const SalesPage = () => {
   };
 
   const handleProductSearch = () => {
-    // Lógica para buscar o produto com base no texto digitado no campo de busca
     console.log('Produto buscado:', product);
   };
 
   const calculateTotal = useCallback(() => {
-    // Lógica para calcular o total baseado na quantidade e método de pagamento
-    let unitPrice = 10; // Preço unitário do produto
+    let unitPrice = 10;
     let totalAmount = unitPrice * quantity;
 
-    // Aplica desconto ou taxa adicional baseado no método de pagamento
     if (paymentMethod === 'credito') {
-      totalAmount *= 1.1; // Aplica 10% de taxa para pagamento com cartão de crédito
+      totalAmount *= 1.1;
     } else if (paymentMethod === 'debito') {
-      totalAmount *= 1.05; // Aplica 5% de taxa para pagamento com cartão de débito
+      totalAmount *= 1.05;
     } else if (paymentMethod === 'pix') {
-      totalAmount *= 0.95; // Aplica 5% de desconto para pagamento com PIX
+      totalAmount *= 0.95;
     }
 
     setTotal(totalAmount);
@@ -84,7 +82,6 @@ const SalesPage = () => {
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
-    // Registra a venda no Firebase
     try {
       const salesRef = collection(firestore, 'sales');
       const docRef = await addDoc(salesRef, {
@@ -100,48 +97,44 @@ const SalesPage = () => {
     }
   };
 
+  const handleMenuButtonClick = () => {
+    setIsSidebarOpen(true);
+  };
+
   return (
     <ThemeProvider theme={theme}>
-      <Navbar />
-      <Sidebar />
+      <Navbar onMenuButtonClick={handleMenuButtonClick} />
+      <Sidebar open={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       <Container>
         <Title>Realizar Venda</Title>
         <Form onSubmit={handleFormSubmit}>
+          <TextField
+            label="Produto"
+            value={product}
+            onChange={(event) => setProduct(event.target.value)}
+          />
+          <Button variant="contained" onClick={handleProductSearch}>
+            Buscar
+          </Button>
+          <TextField
+            label="Quantidade"
+            type="number"
+            value={quantity}
+            onChange={handleQuantityChange}
+          />
           <TextField
             select
             label="Método de Pagamento"
             value={paymentMethod}
             onChange={handlePaymentMethodChange}
           >
-            <option value="dinheiro">Dinheiro</option>
-            <option value="credito">Cartão de Crédito</option>
-            <option value="debito">Cartão de Débito</option>
-            <option value="pix">PIX</option>
+            <MenuItem value="credito">Cartão de Crédito</MenuItem>
+            <MenuItem value="debito">Cartão de Débito</MenuItem>
+            <MenuItem value="pix">PIX</MenuItem>
           </TextField>
-          <TextField
-            type="number"
-            label="Quantidade"
-            value={quantity}
-            onChange={handleQuantityChange}
-          />
-          <TextField
-            type="text"
-            label="Produto"
-            value={product}
-            onChange={(event) => setProduct(event.target.value)}
-          />
-          <TextField type="text" label="Total" value={total} disabled />
+          <TextField label="Total" value={total.toFixed(2)} disabled />
           <Button variant="contained" type="submit">
-            Registrar Venda
-          </Button>
-          <Button variant="contained" onClick={() => console.log('Venda cancelada')}>
-            Cancelar Venda
-          </Button>
-          <Button variant="contained" onClick={calculateTotal}>
-            Atualizar Total
-          </Button>
-          <Button variant="contained" onClick={handleProductSearch}>
-            Buscar Produto
+            Realizar Venda
           </Button>
         </Form>
       </Container>

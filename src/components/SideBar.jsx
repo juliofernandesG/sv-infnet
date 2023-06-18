@@ -27,19 +27,19 @@ const Sidebar = ({ open, onClose }) => {
     <Drawer anchor="left" open={open} onClose={handleDrawerClose}>
       <DrawerContainer>
         <List>
-          <ListItem button>
+          <ListItem button component={Link} to="/clientes">
             <ListItemIcon>
               <GroupIcon />
             </ListItemIcon>
             <ListItemText primary="Clientes" />
           </ListItem>
-          <ListItem button>
+          <ListItem button component={Link} to="/todolist">
             <ListItemIcon>
               <FormatListBulletedIcon />
             </ListItemIcon>
-            <ListItemText primary="Listad de tarefas" />
+            <ListItemText primary="Lista de tarefas" /> 
           </ListItem>
-          <ListItem button components={Link} to="/salespage">
+          <ListItem button component={Link} to="/salespage">
             <ListItemIcon>
               <MonetizationOnIcon />
             </ListItemIcon>

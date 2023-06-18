@@ -1,14 +1,41 @@
 import React, { useState, useEffect } from 'react';
+import { styled } from '@mui/system';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
+import { v4 as uuidv4 } from 'uuid';
+
+import { List, ListItem, ListItemText } from '@mui/material';
+
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'moment/locale/pt-br';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { firestore } from '../config/firebase';
-import Navbar from './Navbar';
-import Sidebar from './SideBar';
-import Footer from './Footer';
+import Navbar from '../components/Navbar';
+import Sidebar from '../components/SideBar';
+import Footer from '../components/Footer';
+
+const Container = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  height: '100vh',
+});
+
+const Form = styled('form')({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '16px',
+  marginBottom: '16px',
+  width: '300px',
+});
 
 const localizer = momentLocalizer(moment);
 
@@ -18,19 +45,33 @@ const MyCalendar = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [activity, setActivity] = useState({ date: null, time: '', team: '', deadline: '' });
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [todos, setTodos] = useState([]);
+  const [todoText, setTodoText] = useState('');
+  const [editMode, setEditMode] = useState(false);
+  const [editTodoId, setEditTodoId] = useState('');
 
   useEffect(() => {
     const loadEvents = async () => {
-      const eventsRef = collection(firestore, 'events');
-      const snapshot = await getDocs(eventsRef);
-      const loadedEvents = snapshot.docs.map((doc) => ({
+  try {
+    const eventsRef = collection(firestore, 'events');
+    const snapshot = await getDocs(eventsRef);
+    const loadedEvents = snapshot.docs.map((doc) => {
+      const data = doc.data();
+      const start = data.start ? data.start.toDate() : null;
+      const end = data.end ? data.end.toDate() : null;
+      return {
         id: doc.id,
-        title: doc.data().title,
-        start: doc.data().start.toDate(),
-        end: doc.data().end.toDate(),
-      }));
-      setEvents(loadedEvents);
-    };
+        title: data.title,
+        start,
+        end,
+      };
+    });
+    setEvents(loadedEvents);
+  } catch (error) {
+    console.error('Error loading events:', error);
+  }
+};
+
 
     loadEvents();
   }, []);
@@ -79,10 +120,46 @@ const MyCalendar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  const handleInputChange = (event) => {
+    setTodoText(event.target.value);
+  };
+
+  const handleAddTodo = (event) => {
+    event.preventDefault();
+    if (editMode) {
+      // Atualizar tarefa existente
+      const updatedTodos = todos.map((todo) => {
+        if (todo.id === editTodoId) {
+          return { ...todo, text: todoText };
+        }
+        return todo;
+      });
+      setTodos(updatedTodos);
+      setEditMode(false);
+      setEditTodoId('');
+    } else {
+      // Adicionar nova tarefa
+      const newTodo = { id: uuidv4(), text: todoText };
+      setTodos([...todos, newTodo]);
+    }
+    setTodoText('');
+  };
+
+  const handleEditTodo = (id, text) => {
+    setEditMode(true);
+    setEditTodoId(id);
+    setTodoText(text);
+  };
+
+  const handleDeleteTodo = (id) => {
+    const updatedTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(updatedTodos);
+  };
+
   return (
     <div>
       <Navbar onMenuButtonClick={toggleSidebar} />
-      <Sidebar isOpen={isSidebarOpen} />
+      <Sidebar open={isSidebarOpen} onClose={toggleSidebar} />
       <div style={{ padding: '16px' }}>
         <Calendar
           localizer={localizer}
@@ -141,6 +218,43 @@ const MyCalendar = () => {
             </Button>
           </DialogActions>
         </Dialog>
+
+        <Container>
+          <Form onSubmit={handleAddTodo}>
+            <TextField
+              label="Todo"
+              value={todoText}
+              onChange={handleInputChange}
+              required
+            />
+            <Button
+              variant="contained"
+              type="submit"
+              startIcon={editMode ? <SaveIcon /> : null}
+            >
+              {editMode ? 'Salvar' : 'Adicionar'}
+            </Button>
+          </Form>
+          <List>
+            {todos.map((todo) => (
+              <ListItem key={todo.id}>
+                <ListItemText primary={todo.text} />
+                <IconButton
+                  aria-label="edit"
+                  onClick={() => handleEditTodo(todo.id, todo.text)}
+                >
+                  <EditIcon />
+                </IconButton>
+                <IconButton
+                  aria-label="delete"
+                  onClick={() => handleDeleteTodo(todo.id)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </ListItem>
+            ))}
+          </List>
+        </Container>
       </div>
       <Footer />
     </div>
