@@ -38,6 +38,7 @@ const Form = styled('form')({
 });
 
 const localizer = momentLocalizer(moment);
+moment.locale('pt-br');
 
 const MyCalendar = () => {
   const [events, setEvents] = useState([]);
@@ -52,26 +53,25 @@ const MyCalendar = () => {
 
   useEffect(() => {
     const loadEvents = async () => {
-  try {
-    const eventsRef = collection(firestore, 'events');
-    const snapshot = await getDocs(eventsRef);
-    const loadedEvents = snapshot.docs.map((doc) => {
-      const data = doc.data();
-      const start = data.start ? data.start.toDate() : null;
-      const end = data.end ? data.end.toDate() : null;
-      return {
-        id: doc.id,
-        title: data.title,
-        start,
-        end,
-      };
-    });
-    setEvents(loadedEvents);
-  } catch (error) {
-    console.error('Error loading events:', error);
-  }
-};
-
+      try {
+        const eventsRef = collection(firestore, 'events');
+        const snapshot = await getDocs(eventsRef);
+        const loadedEvents = snapshot.docs.map((doc) => {
+          const data = doc.data();
+          const start = data.start ? data.start.toDate() : null;
+          const end = data.end ? data.end.toDate() : null;
+          return {
+            id: doc.id,
+            title: data.title,
+            start,
+            end,
+          };
+        });
+        setEvents(loadedEvents);
+      } catch (error) {
+        console.error('Error loading events:', error);
+      }
+    };
 
     loadEvents();
   }, []);

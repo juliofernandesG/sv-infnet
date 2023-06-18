@@ -6,7 +6,7 @@ import HomePage from '../pages/HomePage';
 import SalesPage from '../pages/SalesPage';
 import MyCalendar from '../components/MyCalender';
 import TodoList from '../components/TodoList.jsx';
-import AddProductForm from '../pages/AddProductForm';
+import AddProductForm from '../components/MyCalender';
 
 function AppRoutes() {
   return (
