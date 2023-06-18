@@ -78,6 +78,7 @@ const HomePage = () => {
         <section>
           <h2>Vendas</h2>
           {salesData && (
+<<<<<<< HEAD
             <div className="chart-container">
               <LineChart width={500} height={300} data={salesData}>
                 <XAxis dataKey="name" />
@@ -88,6 +89,16 @@ const HomePage = () => {
                 <Line type="monotone" dataKey="sales" stroke="#007bff" />
               </LineChart>
             </div>
+=======
+            <LineChart width={500} height={300} data={salesData}>
+              <XAxis dataKey="name" />
+              <YAxis />
+              <CartesianGrid strokeDasharray="3 3" />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="sales" stroke="#8884d8" />
+            </LineChart>
+>>>>>>> a540f2533ca28c6124a0d0d37fc4ec486c6c7184
           )}
         </section>
 
@@ -95,6 +106,7 @@ const HomePage = () => {
         <section>
           <h2>Métodos de Pagamento</h2>
           {paymentMethodsData && (
+<<<<<<< HEAD
             <div className="chart-container">
               <PieChart width={500} height={300}>
                 <Pie data={paymentMethodsData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} fill="#007bff" label />
@@ -102,6 +114,13 @@ const HomePage = () => {
                 <Legend />
               </PieChart>
             </div>
+=======
+            <PieChart width={500} height={300}>
+              <Pie data={paymentMethodsData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} fill="#8884d8" label />
+              <Tooltip />
+              <Legend />
+            </PieChart>
+>>>>>>> a540f2533ca28c6124a0d0d37fc4ec486c6c7184
           )}
         </section>
 
@@ -109,6 +128,7 @@ const HomePage = () => {
         <section>
           <h2>Produtos</h2>
           {productsData && (
+<<<<<<< HEAD
             <div className="chart-container">
               <BarChart width={500} height={300} data={productsData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -119,6 +139,16 @@ const HomePage = () => {
                 <Bar dataKey="quantity" fill="#007bff" />
               </BarChart>
             </div>
+=======
+            <BarChart width={500} height={300} data={productsData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="quantity" fill="#8884d8" />
+            </BarChart>
+>>>>>>> a540f2533ca28c6124a0d0d37fc4ec486c6c7184
           )}
         </section>
       </div>

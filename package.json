@@ -14,10 +14,18 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "audit": "^0.0.6",
+<<<<<<< HEAD
     "chartjs-adapter-date-fns": "^3.0.0",
     "chartjs-adapter-luxon": "^1.3.1",
     "chartjs-adapter-moment": "^1.0.1",
     "chat": "^1.0.8",
+=======
+    "chart.js": "^3.9.1",
+    "chartjs-adapter-date-fns": "^1.0.0",
+    "chartjs-adapter-luxon": "^1.3.1",
+    "chartjs-adapter-moment": "^1.0.1",
+    "date-fns": "^2.30.0",
+>>>>>>> a540f2533ca28c6124a0d0d37fc4ec486c6c7184
     "firebase": "^9.22.2",
     "fix": "^0.0.3",
     "moment": "^2.29.4",

@@ -1,10 +1,12 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { styled } from '@mui/system';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { blue } from '@mui/material/colors';
+import { collection, addDoc } from 'firebase/firestore';
+import { firestore } from '../config/firebase';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/SideBar';
@@ -62,7 +64,7 @@ const SalesPage = () => {
     console.log('Produto buscado:', product);
   };
 
-  const calculateTotal = () => {
+  const calculateTotal = useCallback(() => {
     // Lógica para calcular o total baseado na quantidade e método de pagamento
     let unitPrice = 10; // Preço unitário do produto
     let totalAmount = unitPrice * quantity;
@@ -77,16 +79,25 @@ const SalesPage = () => {
     }
 
     setTotal(totalAmount);
-  };
+  }, [paymentMethod, quantity]);
 
-  const handleFormSubmit = (event) => {
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
 
-    // Registra a venda
-    console.log('Produto:', product);
-    console.log('Método de pagamento:', paymentMethod);
-    console.log('Quantidade:', quantity);
-    console.log('Total:', total);
+    // Registra a venda no Firebase
+    try {
+      const salesRef = collection(firestore, 'sales');
+      const docRef = await addDoc(salesRef, {
+        product,
+        paymentMethod,
+        quantity,
+        total,
+      });
+
+      console.log('Venda registrada com sucesso. ID do documento:', docRef.id);
+    } catch (error) {
+      console.error('Erro ao registrar a venda:', error);
+    }
   };
 
   return (
@@ -96,14 +107,6 @@ const SalesPage = () => {
       <Container>
         <Title>Realizar Venda</Title>
         <Form onSubmit={handleFormSubmit}>
-          <TextField
-            label="Buscar Produto"
-            value={product}
-            onChange={(event) => setProduct(event.target.value)}
-          />
-          <Button variant="contained" onClick={handleProductSearch}>
-            Buscar
-          </Button>
           <TextField
             select
             label="Método de Pagamento"
@@ -121,6 +124,12 @@ const SalesPage = () => {
             value={quantity}
             onChange={handleQuantityChange}
           />
+          <TextField
+            type="text"
+            label="Produto"
+            value={product}
+            onChange={(event) => setProduct(event.target.value)}
+          />
           <TextField type="text" label="Total" value={total} disabled />
           <Button variant="contained" type="submit">
             Registrar Venda
@@ -130,6 +139,9 @@ const SalesPage = () => {
           </Button>
           <Button variant="contained" onClick={calculateTotal}>
             Atualizar Total
+          </Button>
+          <Button variant="contained" onClick={handleProductSearch}>
+            Buscar Produto
           </Button>
         </Form>
       </Container>
