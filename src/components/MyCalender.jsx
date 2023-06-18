@@ -11,7 +11,7 @@ import Sidebar from './SideBar';
 import Footer from './Footer';
 
 const localizer = momentLocalizer(moment);
-
+moment.locale('pt-br');
 const MyCalendar = () => {
   const [events, setEvents] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
